@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&amp;family=Lato:wght@300;400;700;900&amp;display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Lato', sans-serif; color: #2c2c3a; background: #fff; overflow-x: hidden; }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes pnMarquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    @media (max-width: 900px) {
+      .pn-desktop-nav { display: none !important; }
+      .pn-hamburger   { display: flex !important; }
+      .pn-about-cards { flex-direction: column !important; }
+      .pn-team-grid   { grid-template-columns: repeat(2, 1fr) !important; }
+      .pn-footer-grid { grid-template-columns: 1fr !important; gap: 36px !important; }
+      .pn-contact-layout { flex-direction: column !important; }
+      .pn-policy-grid { grid-template-columns: 1fr !important; }
+      .pn-hero-title  { font-size: 2.6rem !important; }
+      .pn-audience-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    }
+    @media (min-width: 901px) {
+      .pn-hamburger { display: none !important; }
+    }
+    @media (max-width: 500px) {
+      .pn-team-grid { grid-template-columns: 1fr !important; }
+      .pn-hero-title { font-size: 2rem !important; }
+      .pn-audience-grid { grid-template-columns: 1fr !important; }
+    }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: 'Lato', sans-serif; }
+    input, textarea { font-family: 'Lato', sans-serif; font-size: 15px; }
+    textarea { resize: vertical; }
+  </style>
+</helmet>
+
+<!-- ========================================================
+     FIXED HEADER
+     ======================================================== -->
+<header style="position: fixed; top: 0; left: 0; right: 0; z-index: 999; background: #fff; border-bottom: 1px solid #e0e4ef;">
+  <div style="max-width: 1200px; margin: 0 auto; padding: 0 28px; display: flex; align-items: center; justify-content: space-between; height: 88px;">
+
+    <!-- Logo -->
+    <button onClick="{{ goHome }}" style="display: flex; align-items: center; gap: 0; padding: 0; flex-shrink: 0;">
+      <img src="uploads/Gemini_Generated_Image_revuvcrevuvcrevu.png" alt="Prisma Nacional" style="height: 80px; width: auto; object-fit: contain;">
+    </button>
+
+    <!-- Desktop nav -->
+    <nav class="pn-desktop-nav" style="display: flex; align-items: center; gap: 40px;">
+      <button onClick="{{ goHome }}" style="font-size: 14px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: {{ navHomeColor }}; padding: 8px 0; border-bottom: 2px solid {{ navHomeBorder }}; transition: color .2s, border-color .2s;">Home</button>
+      <button onClick="{{ goAbout }}" style="font-size: 14px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: {{ navAboutColor }}; padding: 8px 0; border-bottom: 2px solid {{ navAboutBorder }}; transition: color .2s, border-color .2s;">Sobre</button>
+      <button onClick="{{ goContact }}" style="font-size: 14px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: {{ navContactColor }}; padding: 8px 0; border-bottom: 2px solid {{ navContactBorder }}; transition: color .2s, border-color .2s;">Contato</button>
+    </nav>
+
+    <!-- Hamburger -->
+    <button class="pn-hamburger" onClick="{{ toggleMenu }}" style="display: none; flex-direction: column; gap: 5px; padding: 8px;">
+      <span style="display: block; width: 24px; height: 2px; background: #1A237E; border-radius: 2px;"></span>
+      <span style="display: block; width: 24px; height: 2px; background: #1A237E; border-radius: 2px;"></span>
+      <span style="display: block; width: 24px; height: 2px; background: #1A237E; border-radius: 2px;"></span>
+    </button>
+  </div>
+
+  <!-- Mobile dropdown -->
+  <sc-if value="{{ mobileMenuOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="background: #fff; border-top: 1px solid #e8eaf0; padding: 8px 28px 20px;">
+      <button onClick="{{ goHome }}" style="display: block; width: 100%; text-align: left; font-size: 15px; font-weight: 700; color: #1A237E; padding: 14px 0; border-bottom: 1px solid #f0f0f5; letter-spacing: 0.4px;">Home</button>
+      <button onClick="{{ goAbout }}" style="display: block; width: 100%; text-align: left; font-size: 15px; font-weight: 700; color: #1A237E; padding: 14px 0; border-bottom: 1px solid #f0f0f5; letter-spacing: 0.4px;">Sobre</button>
+      <button onClick="{{ goContact }}" style="display: block; width: 100%; text-align: left; font-size: 15px; font-weight: 700; color: #1A237E; padding: 14px 0; letter-spacing: 0.4px;">Contato</button>
+    </div>
+  </sc-if>
+</header>
+
+<!-- ========================================================
+     MAIN SCROLL WRAPPER
+     ======================================================== -->
+<div style="padding-top: 88px; min-height: 100vh; display: flex; flex-direction: column;">
+
+  <!-- ======================================================
+       HOME PAGE
+       ====================================================== -->
+  <sc-if value="{{ showHome }}" hint-placeholder-val="{{ true }}">
+    <div style="animation: fadeIn .45s ease both; flex: 1; display: flex; flex-direction: column;">
+
+      <!-- HERO -->
+      <section style="background: url('uploads/image-clean (2).png') center/cover no-repeat; min-height: 580px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 100px 28px 80px; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -120px; right: -120px; width: 500px; height: 500px; border-radius: 50%; background: rgba(123,31,162,.18); filter: blur(90px); pointer-events: none;"></div>
+        <div style="position: absolute; bottom: -80px; left: -80px; width: 360px; height: 360px; border-radius: 50%; background: rgba(249,168,37,.07); filter: blur(70px); pointer-events: none;"></div>
+        <div style="position: relative; max-width: 680px; animation: fadeInUp .9s ease both;">
+          <div style="display: flex; justify-content: center; margin-bottom: 24px;">
+            <img src="uploads/image-removebg-preview (20).png" alt="Prisma Nacional" style="max-width: 650px; height: auto; margin-top: -40px; margin-right: -100px; margin-bottom: -40px; margin-left: -100px">
+          </div>
+          <p style="font-size: 1.2rem; color: rgba(255,255,255,.8); font-weight: 300; letter-spacing: .4px; line-height: 1.7; margin-bottom: 44px;">Revista Científica de Iconografia na Arte Brasileira</p>
+          <button onClick="{{ goAbout }}" style="background: #F9A825; color: #1A237E; font-size: 13px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; padding: 17px 44px; border-radius: 2px; box-shadow: 0 6px 24px rgba(249,168,37,.35); transition: transform .2s, box-shadow .2s;" style-hover="transform: translateY(-2px); box-shadow: 0 10px 32px rgba(249,168,37,.45);">Conheça a Revista</button>
+        </div>
+      </section>
+
+      <!-- SOBRE A REVISTA -->
+      <section style="background: #F5F5F5; padding: 88px 28px; animation: fadeInUp .8s ease .1s both;">
+        <div style="max-width: 1160px; margin: 0 auto;">
+          <div style="text-align: center; margin-bottom: 60px;">
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 2.1rem; color: #1A237E; margin-bottom: 14px;">Sobre a Revista</h2>
+            <div style="width: 56px; height: 3px; background: #F9A825; margin: 0 auto;"></div>
+          </div>
+          <div class="pn-about-cards" style="display: flex; gap: 28px; align-items: stretch;">
+
+            <!-- Card Missão -->
+            <div style="flex: 1; background: #fff; border: 1px solid #e8eaf0; border-radius: 4px; padding: 40px 32px; box-shadow: 0 2px 14px rgba(26,35,126,.05);">
+              <div style="width: 54px; height: 54px; background: linear-gradient(135deg, #1A237E, #7B1FA2); border-radius: 3px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+              </div>
+              <h3 style="font-family: 'Playfair Display', serif; font-size: 1.35rem; color: #1A237E; margin-bottom: 14px;">Nossa Missão</h3>
+              <p style="color: #5a5a70; line-height: 1.8; font-size: 15px;">Divulgar pesquisas científicas e acadêmicas sobre iconografia na arte brasileira, fomentando o debate qualificado entre pesquisadores, docentes e estudantes de todo o país.</p>
+            </div>
+
+            <!-- Card Temática -->
+            <div style="flex: 1; background: #fff; border: 1px solid #e8eaf0; border-radius: 4px; padding: 40px 32px; box-shadow: 0 2px 14px rgba(26,35,126,.05);">
+              <div style="width: 54px; height: 54px; background: linear-gradient(135deg, #1A237E, #7B1FA2); border-radius: 3px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18M9 21V9"></path></svg>
+              </div>
+              <h3 style="font-family: 'Playfair Display', serif; font-size: 1.35rem; color: #1A237E; margin-bottom: 14px;">Temática</h3>
+              <p style="color: #5a5a70; line-height: 1.8; font-size: 15px;">A arte brasileira como documento de memória e cultura: iconografia, patrimônio histórico, museologia e as intersecções entre imagem, identidade e território nacional.</p>
+            </div>
+
+            <!-- Card Acesso Aberto -->
+            <div style="flex: 1; background: #fff; border: 1px solid #e8eaf0; border-radius: 4px; padding: 40px 32px; box-shadow: 0 2px 14px rgba(26,35,126,.05);">
+              <div style="width: 54px; height: 54px; background: linear-gradient(135deg, #1A237E, #7B1FA2); border-radius: 3px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+              </div>
+              <h3 style="font-family: 'Playfair Display', serif; font-size: 1.35rem; color: #1A237E; margin-bottom: 14px;">Acesso Aberto</h3>
+              <p style="color: #5a5a70; line-height: 1.8; font-size: 15px;">Publicada sob a licença Creative Commons BY 4.0, a Prisma Nacional acredita que o conhecimento científico deve ser acessível a todos, sem barreiras financeiras ou geográficas.</p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ARTIGO EM DESTAQUE -->
+      <section style="background: linear-gradient(135deg, rgba(26,35,126,.04) 0%, rgba(123,31,162,.04) 100%); padding: 88px 28px; animation: fadeInUp .8s ease .12s both;">
+        <div style="max-width: 1160px; margin: 0 auto;">
+          <div style="text-align: center; margin-bottom: 60px;">
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 2.1rem; color: #1A237E; margin-bottom: 14px;">Artigo em Destaque</h2>
+            <div style="width: 56px; height: 3px; background: #F9A825; margin: 0 auto;"></div>
+          </div>
+          
+          <!-- Card do Artigo -->
+          <div style="background: #fff; border-radius: 6px; box-shadow: 0 2px 14px rgba(26,35,126,.08); overflow: hidden; transition: box-shadow .3s ease; cursor: pointer;" style-hover="box-shadow: 0 10px 32px rgba(26,35,126,.15);">
+            <div style="display: flex; gap: 48px; padding: 56px; align-items: stretch; flex-wrap: wrap;">
+              <!-- Imagem/Ilustração -->
+              <div style="flex: 0 1 320px; background: linear-gradient(135deg, #1A237E 0%, #7B1FA2 100%); border-radius: 4px; min-height: 280px; display: flex; align-items: center; justify-content: center;">
+                <div style="text-align: center; color: #fff; padding: 40px;">
+                  <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 24px; opacity: .8;">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                  </svg>
+                  <p style="font-size: 14px; opacity: .9; letter-spacing: .5px;">Iconografia &amp; Arte</p>
+                </div>
+              </div>
+              
+              <!-- Conteúdo -->
+              <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 12px;">Destaque</p>
+                  <h3 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #1A237E; margin-bottom: 16px; line-height: 1.3;">Iconografia e Identidade: Reflexões sobre a Arte Brasileira Contemporânea</h3>
+                  <p style="font-size: 13px; color: #5a5a70; margin-bottom: 8px;"></p>
+                  <p style="font-size: 13px; color: #7B1FA2; font-weight: 600; margin-bottom: 20px;">Volume 1 - 2025</p>
+                  <p style="color: #5a5a70; line-height: 1.8; font-size: 15px; margin-bottom: 28px;">Explore o primeiro artigo da Prisma Nacional, onde analisamos os significados ocultos nas produções artísticas brasileiras e seu papel como documento de memória cultural.</p>
+                </div>
+                <button onClick="{{ handleReadArticle }}" style="background: #F9A825; color: #1A237E; font-size: 13px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; padding: 15px 40px; border-radius: 2px; box-shadow: 0 6px 24px rgba(249,168,37,.35); transition: transform .2s, box-shadow .2s; cursor: pointer; border: none; align-self: flex-start;" style-hover="transform: translateY(-2px); box-shadow: 0 10px 32px rgba(249,168,37,.45);">Leia o Artigo</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EQUIPE EDITORIAL -->
+      <section style="background: #fff; padding: 88px 0; animation: fadeInUp .8s ease .15s both;">
+        <div style="max-width: 1160px; margin: 0 auto; padding: 0 28px;">
+          <div style="text-align: center; margin-bottom: 60px;">
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 2.1rem; color: #1A237E; margin-bottom: 14px;">Equipe Editorial</h2>
+            <div style="width: 56px; height: 3px; background: #F9A825; margin: 0 auto;"></div>
+          </div>
+        </div>
+        <div style="overflow: hidden; position: relative;">
+          <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 140px; background: linear-gradient(to right, #fff 30%, transparent); z-index: 2; pointer-events: none;"></div>
+          <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 140px; background: linear-gradient(to left, #fff 30%, transparent); z-index: 2; pointer-events: none;"></div>
+          <div style="display: flex; gap: 24px; width: max-content; padding: 8px 24px 16px; animation: pnMarquee 38s linear infinite;" style-hover="animation-play-state: paused;">
+            <div style="flex: none; width: 230px; text-align: center; padding: 36px 18px 28px; border: 1px solid #e8eaf0; border-radius: 4px; box-shadow: 0 2px 10px rgba(26,35,126,.04); background: #fff;">
+              <div style="width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #1A237E, #7B1FA2); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #fff; font-weight: 700; letter-spacing: 1px;">YL</div>
+              <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #1A237E; margin-bottom: 8px; line-height: 1.3;">Yasmin Lemos</h4>
+              <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;">Editora Chefe</p>
+            </div>
+            <div style="flex: none; width: 230px; text-align: center; padding: 36px 18px 28px; border: 1px solid #e8eaf0; border-radius: 4px; box-shadow: 0 2px 10px rgba(26,35,126,.04); background: #fff;">
+              <div style="width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #7B1FA2, #1A237E); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #fff; font-weight: 700; letter-spacing: 1px;">IG</div>
+              <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #1A237E; margin-bottom: 8px; line-height: 1.3;">Iúna Gomes</h4>
+              <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;">Arte &amp; Branding</p>
+            </div>
+            <div style="flex: none; width: 230px; text-align: center; padding: 36px 18px 28px; border: 1px solid #e8eaf0; border-radius: 4px; box-shadow: 0 2px 10px rgba(26,35,126,.04); background: #fff;">
+              <div style="width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #1A237E, #7B1FA2); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #fff; font-weight: 700; letter-spacing: 1px;">KV</div>
+              <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #1A237E; margin-bottom: 8px; line-height: 1.3;">Kamilly Vasconcelos</h4>
+              <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;">Revisão de Texto</p>
+            </div>
+            <div style="flex: none; width: 230px; text-align: center; padding: 36px 18px 28px; border: 1px solid #e8eaf0; border-radius: 4px; box-shadow: 0 2px 10px rgba(26,35,126,.04); background: #fff;">
+              <div style="width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #7B1FA2, #1A237E); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #fff; font-weight: 700; letter-spacing: 1px;">EE</div>
+              <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #1A237E; margin-bottom: 8px; line-height: 1.3;">Evelyn Escottar</h4>
+              <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;">Editora de Seção</p>
+            </div>
+            <div style="flex: none; width: 230px; text-align: center; padding: 36px 18px 28px; border: 1px solid #e8eaf0; border-radius: 4px; box-shadow: 0 2px 10px rgba(26,35,126,.04); background: #fff;">
+              <div style="width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #1A237E, #7B1FA2); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #fff; font-weight: 700; letter-spacing: 1px;">JD</div>
+              <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #1A237E; margin-bottom: 8px; line-height: 1.3;">João Dutra</h4>
+              <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;">Editor de Seção</p>
+            </div>
+            <!-- Duplicate set for seamless infinite loop -->
+            <div style="flex: none; width: 230px; text-align: center; padding: 36px 18px 28px; border: 1px solid #e8eaf0; border-radius: 4px; box-shadow: 0 2px 10px rgba(26,35,126,.04); background: #fff;">
+              <div style="width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #1A237E, #7B1FA2); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #fff; font-weight: 700; letter-spacing: 1px;">YL</div>
+              <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #1A237E; margin-bottom: 8px; line-height: 1.3;">Yasmin Lemos</h4>
+              <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;">Editora Chefe</p>
+            </div>
+            <div style="flex: none; width: 230px; text-align: center; padding: 36px 18px 28px; border: 1px solid #e8eaf0; border-radius: 4px; box-shadow: 0 2px 10px rgba(26,35,126,.04); background: #fff;">
+              <div style="width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #7B1FA2, #1A237E); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #fff; font-weight: 700; letter-spacing: 1px;">IG</div>
+              <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #1A237E; margin-bottom: 8px; line-height: 1.3;">Iúna Gomes</h4>
+              <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;">Arte &amp; Branding</p>
+            </div>
+            <div style="flex: none; width: 230px; text-align: center; padding: 36px 18px 28px; border: 1px solid #e8eaf0; border-radius: 4px; box-shadow: 0 2px 10px rgba(26,35,126,.04); background: #fff;">
+              <div style="width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #1A237E, #7B1FA2); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #fff; font-weight: 700; letter-spacing: 1px;">KV</div>
+              <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #1A237E; margin-bottom: 8px; line-height: 1.3;">Kamilly Vasconcelos</h4>
+              <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;">Revisão de Texto</p>
+            </div>
+            <div style="flex: none; width: 230px; text-align: center; padding: 36px 18px 28px; border: 1px solid #e8eaf0; border-radius: 4px; box-shadow: 0 2px 10px rgba(26,35,126,.04); background: #fff;">
+              <div style="width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #7B1FA2, #1A237E); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #fff; font-weight: 700; letter-spacing: 1px;">EE</div>
+              <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #1A237E; margin-bottom: 8px; line-height: 1.3;">Evelyn Escottar</h4>
+              <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;">Editora de Seção</p>
+            </div>
+            <div style="flex: none; width: 230px; text-align: center; padding: 36px 18px 28px; border: 1px solid #e8eaf0; border-radius: 4px; box-shadow: 0 2px 10px rgba(26,35,126,.04); background: #fff;">
+              <div style="width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #1A237E, #7B1FA2); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #fff; font-weight: 700; letter-spacing: 1px;">JD</div>
+              <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #1A237E; margin-bottom: 8px; line-height: 1.3;">João Dutra</h4>
+              <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;">Editor de Seção</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NEWSLETTER -->
+      <section style="background: url('uploads/image-clean (1).png') center/cover no-repeat; padding: 88px 28px;">
+        <div style="max-width: 640px; margin: 0 auto; text-align: center;">
+          <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; color: #fff; margin-bottom: 16px; line-height: 1.3;">Fique por dentro das nossas publicações</h2>
+          <p style="color: rgba(255,255,255,.75); font-size: 16px; line-height: 1.7; margin-bottom: 44px;">Receba notificações sobre novos artigos, chamadas para submissão e eventos científicos.</p>
+
+          <sc-if value="{{ subscribed }}" hint-placeholder-val="{{ false }}">
+            <div style="background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); border-radius: 4px; padding: 28px 36px;">
+              <p style="color: #F9A825; font-size: 1.1rem; font-weight: 700; margin-bottom: 8px;">✓ Inscrição realizada com sucesso!</p>
+              <p style="color: rgba(255,255,255,.75); font-size: 14px;">Você receberá nossos boletins em breve.</p>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ showNewsletterForm }}" hint-placeholder-val="{{ true }}">
+            <div style="display: flex; max-width: 520px; margin: 0 auto; border-radius: 3px; overflow: hidden; box-shadow: 0 6px 28px rgba(0,0,0,.25);">
+              <input type="email" placeholder="Seu endereço de e-mail" value="{{ emailInput }}" onChange="{{ handleEmail }}" style="flex: 1; padding: 16px 20px; border: none; font-size: 15px; color: #222; outline: none; min-width: 0;">
+              <button onClick="{{ handleSubscribe }}" style="background: #F9A825; color: #1A237E; font-size: 13px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; padding: 16px 28px; border: none; cursor: pointer; white-space: nowrap; flex-shrink: 0;" style-hover="background: #ffb700;">Inscrever-se</button>
+            </div>
+          </sc-if>
+        </div>
+      </section>
+
+    </div>
+  </sc-if>
+
+  <!-- ======================================================
+       SOBRE PAGE
+       ====================================================== -->
+  <sc-if value="{{ showAbout }}" hint-placeholder-val="{{ false }}">
+    <div style="animation: fadeIn .45s ease both; flex: 1; display: flex; flex-direction: column;">
+
+      <!-- Hero pequeno -->
+      <section style="background: linear-gradient(140deg, #08104a 0%, #1A237E 60%, #311b6b 100%); padding: 80px 28px 68px; text-align: center;">
+        <h1 style="font-family: 'Playfair Display', serif; font-size: 2.8rem; color: #fff; margin-bottom: 18px; animation: fadeInUp .7s ease both;">Sobre a Revista</h1>
+        <div style="width: 56px; height: 3px; background: #F9A825; margin: 0 auto;"></div>
+      </section>
+
+      <!-- Missão e Objetivos -->
+      <section style="background: #fff; padding: 80px 28px;">
+        <div style="max-width: 820px; margin: 0 auto;">
+          <h2 style="font-family: 'Playfair Display', serif; font-size: 1.85rem; color: #1A237E; margin-bottom: 14px;">Missão e Objetivos</h2>
+          <div style="width: 40px; height: 3px; background: #F9A825; margin-bottom: 32px;"></div>
+          <p style="color: #4a4a60; line-height: 1.95; font-size: 16px; margin-bottom: 22px;">A <strong style="color: #1A237E;">Prisma Nacional</strong> é uma revista científica dedicada à iconografia na arte brasileira. Nosso compromisso é criar um espaço qualificado de publicação e debate para pesquisadores que investigam a imagem como documento histórico, cultural e identitário.</p>
+          <p style="color: #4a4a60; line-height: 1.95; font-size: 16px; margin-bottom: 22px;">A revista tem como objetivo central divulgar pesquisas originais, artigos de revisão, relatos de experiência e ensaios críticos que abordem a iconografia em sua relação com o patrimônio cultural, a memória coletiva e as manifestações artísticas do Brasil.</p>
+          <p style="color: #4a4a60; line-height: 1.95; font-size: 16px;">Acreditamos que a arte visual constitui um registro insubstituível da história e da cultura de um povo, e que o seu estudo sistemático é essencial para a preservação e valorização do patrimônio imaterial brasileiro.</p>
+        </div>
+      </section>
+
+      <!-- Público-alvo -->
+      <section style="background: #F5F5F5; padding: 80px 28px;">
+        <div style="max-width: 1000px; margin: 0 auto;">
+          <h2 style="font-family: 'Playfair Display', serif; font-size: 1.85rem; color: #1A237E; margin-bottom: 14px;">Público-Alvo</h2>
+          <div style="width: 40px; height: 3px; background: #F9A825; margin-bottom: 32px;"></div>
+          <p style="color: #4a4a60; line-height: 1.85; font-size: 16px; margin-bottom: 40px;">A Prisma Nacional é voltada para a comunidade acadêmica e profissional interessada nas interseções entre imagem, história e cultura brasileira:</p>
+          <div class="pn-audience-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+            <div style="background: #fff; padding: 28px 24px; border-radius: 3px; border-left: 4px solid #1A237E; box-shadow: 0 2px 10px rgba(26,35,126,.06);">
+              <p style="font-weight: 700; color: #1A237E; margin-bottom: 10px; font-size: 15px;">Pesquisadores</p>
+              <p style="font-size: 14px; color: #666; line-height: 1.65;">Doutores e pós-graduandos das áreas de Artes, História e Cultura</p>
+            </div>
+            <div style="background: #fff; padding: 28px 24px; border-radius: 3px; border-left: 4px solid #7B1FA2; box-shadow: 0 2px 10px rgba(26,35,126,.06);">
+              <p style="font-weight: 700; color: #7B1FA2; margin-bottom: 10px; font-size: 15px;">Graduandos</p>
+              <p style="font-size: 14px; color: #666; line-height: 1.65;">Estudantes de iniciação científica em Artes Visuais e afins</p>
+            </div>
+            <div style="background: #fff; padding: 28px 24px; border-radius: 3px; border-left: 4px solid #b88700; box-shadow: 0 2px 10px rgba(26,35,126,.06);">
+              <p style="font-weight: 700; color: #8a6200; margin-bottom: 10px; font-size: 15px;">Historiadores</p>
+              <p style="font-size: 14px; color: #666; line-height: 1.65;">Profissionais de História com interesse em iconografia e patrimônio</p>
+            </div>
+            <div style="background: #fff; padding: 28px 24px; border-radius: 3px; border-left: 4px solid #1A237E; box-shadow: 0 2px 10px rgba(26,35,126,.06);">
+              <p style="font-weight: 700; color: #1A237E; margin-bottom: 10px; font-size: 15px;">Museólogos</p>
+              <p style="font-size: 14px; color: #666; line-height: 1.65;">Profissionais de Museologia e curadoria de acervos culturais</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Políticas Editoriais -->
+      <section style="background: #fff; padding: 80px 28px;">
+        <div style="max-width: 1000px; margin: 0 auto;">
+          <div style="text-align: center; margin-bottom: 56px;">
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 1.85rem; color: #1A237E; margin-bottom: 14px;">Políticas Editoriais</h2>
+            <div style="width: 40px; height: 3px; background: #F9A825; margin: 0 auto;"></div>
+          </div>
+          <div class="pn-policy-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px;">
+            <div style="padding: 36px 32px; border: 1px solid #e0e4ef; border-radius: 4px; box-shadow: 0 2px 12px rgba(26,35,126,.05);">
+              <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #1A237E, #7B1FA2); border-radius: 3px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              </div>
+              <h3 style="font-family: 'Playfair Display', serif; font-size: 1.15rem; color: #1A237E; margin-bottom: 12px;">Avaliação por Pares</h3>
+              <p style="color: #5a5a70; font-size: 14px; line-height: 1.8;">Todos os artigos passam por avaliação <em>Double Blind</em> (duplo-cego), garantindo imparcialidade e rigor científico no processo de revisão.</p>
+            </div>
+            <div style="padding: 36px 32px; border: 1px solid #e0e4ef; border-radius: 4px; box-shadow: 0 2px 12px rgba(26,35,126,.05);">
+              <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #1A237E, #7B1FA2); border-radius: 3px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+              </div>
+              <h3 style="font-family: 'Playfair Display', serif; font-size: 1.15rem; color: #1A237E; margin-bottom: 12px;">Antiplágio</h3>
+              <p style="color: #5a5a70; font-size: 14px; line-height: 1.8;">Utilizamos as ferramentas Reprism e JustDone para verificação de originalidade em todos os manuscritos, assegurando a integridade da produção publicada.</p>
+            </div>
+            <div style="padding: 36px 32px; border: 1px solid #e0e4ef; border-radius: 4px; box-shadow: 0 2px 12px rgba(26,35,126,.05);">
+              <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #1A237E, #7B1FA2); border-radius: 3px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              </div>
+              <h3 style="font-family: 'Playfair Display', serif; font-size: 1.15rem; color: #1A237E; margin-bottom: 12px;">Ética e Integridade</h3>
+              <p style="color: #5a5a70; font-size: 14px; line-height: 1.8;">A Prisma Nacional segue as diretrizes do COPE (Committee on Publication Ethics) e preza pela conduta responsável na pesquisa e comunicação científica.</p>
+            </div>
+            <div style="padding: 36px 32px; border: 1px solid #e0e4ef; border-radius: 4px; box-shadow: 0 2px 12px rgba(26,35,126,.05);">
+              <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #1A237E, #7B1FA2); border-radius: 3px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+              </div>
+              <h3 style="font-family: 'Playfair Display', serif; font-size: 1.15rem; color: #1A237E; margin-bottom: 12px;">Ciência Aberta</h3>
+              <p style="color: #5a5a70; font-size: 14px; line-height: 1.8;">Publicamos sob licença Creative Commons BY 4.0, permitindo livre acesso, leitura, cópia e distribuição dos conteúdos sem restrições financeiras.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Equipe (Sobre page) -->
+      <section style="background: #F5F5F5; padding: 80px 0;">
+        <div style="max-width: 1160px; margin: 0 auto; padding: 0 28px;">
+          <div style="text-align: center; margin-bottom: 56px;">
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 1.85rem; color: #1A237E; margin-bottom: 14px;">Nossa Equipe</h2>
+            <div style="width: 40px; height: 3px; background: #F9A825; margin: 0 auto;"></div>
+          </div>
+        </div>
+        <div style="overflow: hidden; position: relative;">
+          <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 140px; background: linear-gradient(to right, #F5F5F5 30%, transparent); z-index: 2; pointer-events: none;"></div>
+          <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 140px; background: linear-gradient(to left, #F5F5F5 30%, transparent); z-index: 2; pointer-events: none;"></div>
+          <div style="display: flex; gap: 24px; width: max-content; padding: 8px 24px 16px; animation: pnMarquee 38s linear infinite;" style-hover="animation-play-state: paused;">
+            <div style="flex: none; width: 230px; text-align: center; background: #fff; padding: 36px 18px 28px; border: 1px solid #e8eaf0; border-radius: 4px; box-shadow: 0 2px 10px rgba(26,35,126,.04);">
+              <div style="width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #1A237E, #7B1FA2); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #fff; font-weight: 700; letter-spacing: 1px;">YL</div>
+              <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #1A237E; margin-bottom: 8px; line-height: 1.3;">Yasmin Lemos</h4>
+              <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;">Editora Chefe</p>
+            </div>
+            <div style="flex: none; width: 230px; text-align: center; background: #fff; padding: 36px 18px 28px; border: 1px solid #e8eaf0; border-radius: 4px; box-shadow: 0 2px 10px rgba(26,35,126,.04);">
+              <div style="width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #7B1FA2, #1A237E); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #fff; font-weight: 700; letter-spacing: 1px;">IG</div>
+              <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #1A237E; margin-bottom: 8px; line-height: 1.3;">Iúna Gomes</h4>
+              <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;">Arte &amp; Branding</p>
+            </div>
+            <div style="flex: none; width: 230px; text-align: center; background: #fff; padding: 36px 18px 28px; border: 1px solid #e8eaf0; border-radius: 4px; box-shadow: 0 2px 10px rgba(26,35,126,.04);">
+              <div style="width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #1A237E, #7B1FA2); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #fff; font-weight: 700; letter-spacing: 1px;">KV</div>
+              <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #1A237E; margin-bottom: 8px; line-height: 1.3;">Kamilly Vasconcelos</h4>
+              <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;">Revisão de Texto</p>
+            </div>
+            <div style="flex: none; width: 230px; text-align: center; background: #fff; padding: 36px 18px 28px; border: 1px solid #e8eaf0; border-radius: 4px; box-shadow: 0 2px 10px rgba(26,35,126,.04);">
+              <div style="width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #7B1FA2, #1A237E); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #fff; font-weight: 700; letter-spacing: 1px;">EE</div>
+              <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #1A237E; margin-bottom: 8px; line-height: 1.3;">Evelyn Escottar</h4>
+              <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;">Editora de Seção</p>
+            </div>
+            <div style="flex: none; width: 230px; text-align: center; background: #fff; padding: 36px 18px 28px; border: 1px solid #e8eaf0; border-radius: 4px; box-shadow: 0 2px 10px rgba(26,35,126,.04);">
+              <div style="width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #1A237E, #7B1FA2); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #fff; font-weight: 700; letter-spacing: 1px;">JD</div>
+              <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #1A237E; margin-bottom: 8px; line-height: 1.3;">João Dutra</h4>
+              <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;">Editor de Seção</p>
+            </div>
+            <!-- Duplicate set for seamless infinite loop -->
+            <div style="flex: none; width: 230px; text-align: center; background: #fff; padding: 36px 18px 28px; border: 1px solid #e8eaf0; border-radius: 4px; box-shadow: 0 2px 10px rgba(26,35,126,.04);">
+              <div style="width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #1A237E, #7B1FA2); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #fff; font-weight: 700; letter-spacing: 1px;">YL</div>
+              <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #1A237E; margin-bottom: 8px; line-height: 1.3;">Yasmin Lemos</h4>
+              <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;">Editora Chefe</p>
+            </div>
+            <div style="flex: none; width: 230px; text-align: center; background: #fff; padding: 36px 18px 28px; border: 1px solid #e8eaf0; border-radius: 4px; box-shadow: 0 2px 10px rgba(26,35,126,.04);">
+              <div style="width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #7B1FA2, #1A237E); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #fff; font-weight: 700; letter-spacing: 1px;">IG</div>
+              <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #1A237E; margin-bottom: 8px; line-height: 1.3;">Iúna Gomes</h4>
+              <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;">Arte &amp; Branding</p>
+            </div>
+            <div style="flex: none; width: 230px; text-align: center; background: #fff; padding: 36px 18px 28px; border: 1px solid #e8eaf0; border-radius: 4px; box-shadow: 0 2px 10px rgba(26,35,126,.04);">
+              <div style="width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #1A237E, #7B1FA2); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #fff; font-weight: 700; letter-spacing: 1px;">KV</div>
+              <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #1A237E; margin-bottom: 8px; line-height: 1.3;">Kamilly Vasconcelos</h4>
+              <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;">Revisão de Texto</p>
+            </div>
+            <div style="flex: none; width: 230px; text-align: center; background: #fff; padding: 36px 18px 28px; border: 1px solid #e8eaf0; border-radius: 4px; box-shadow: 0 2px 10px rgba(26,35,126,.04);">
+              <div style="width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #7B1FA2, #1A237E); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #fff; font-weight: 700; letter-spacing: 1px;">EE</div>
+              <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #1A237E; margin-bottom: 8px; line-height: 1.3;">Evelyn Escottar</h4>
+              <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;">Editora de Seção</p>
+            </div>
+            <div style="flex: none; width: 230px; text-align: center; background: #fff; padding: 36px 18px 28px; border: 1px solid #e8eaf0; border-radius: 4px; box-shadow: 0 2px 10px rgba(26,35,126,.04);">
+              <div style="width: 74px; height: 74px; border-radius: 50%; background: linear-gradient(135deg, #1A237E, #7B1FA2); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #fff; font-weight: 700; letter-spacing: 1px;">JD</div>
+              <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #1A237E; margin-bottom: 8px; line-height: 1.3;">João Dutra</h4>
+              <p style="font-size: 12px; color: #7B1FA2; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;">Editor de Seção</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </sc-if>
+
+  <!-- ======================================================
+       CONTATO PAGE
+       ====================================================== -->
+  <sc-if value="{{ showContact }}" hint-placeholder-val="{{ false }}">
+    <div style="animation: fadeIn .45s ease both; flex: 1; display: flex; flex-direction: column;">
+
+      <!-- Hero pequeno -->
+      <section style="background: linear-gradient(140deg, #08104a 0%, #1A237E 60%, #311b6b 100%); padding: 80px 28px 68px; text-align: center;">
+        <h1 style="font-family: 'Playfair Display', serif; font-size: 2.8rem; color: #fff; margin-bottom: 18px; animation: fadeInUp .7s ease both;">Entre em Contato</h1>
+        <div style="width: 56px; height: 3px; background: #F9A825; margin: 0 auto;"></div>
+      </section>
+
+      <!-- Form + Redes -->
+      <section style="background: #F5F5F5; padding: 80px 28px; flex: 1;">
+        <div style="max-width: 1000px; margin: 0 auto;">
+          <div class="pn-contact-layout" style="display: flex; gap: 44px; align-items: flex-start;">
+
+            <!-- Form card -->
+            <div style="flex: 2; background: #fff; padding: 48px; border-radius: 4px; box-shadow: 0 2px 20px rgba(26,35,126,.07);">
+              <h2 style="font-family: 'Playfair Display', serif; font-size: 1.55rem; color: #1A237E; margin-bottom: 36px;">Envie sua mensagem</h2>
+
+              <sc-if value="{{ formSent }}" hint-placeholder-val="{{ false }}">
+                <div style="background: #eaf3ea; border: 1px solid #a8d5a2; border-radius: 3px; padding: 28px 24px; text-align: center;">
+                  <p style="color: #2e7d32; font-weight: 700; font-size: 1.05rem; margin-bottom: 8px;">✓ Mensagem enviada com sucesso!</p>
+                  <p style="color: #555; font-size: 14px;">Nossa equipe editorial entrará em contato em breve.</p>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ showContactForm }}" hint-placeholder-val="{{ true }}">
+                <div style="display: flex; flex-direction: column; gap: 22px;">
+                  <div>
+                    <label style="display: block; font-size: 12px; font-weight: 700; color: #1A237E; letter-spacing: .8px; text-transform: uppercase; margin-bottom: 8px;">Nome completo</label>
+                    <input type="text" placeholder="Seu nome" value="{{ formName }}" onChange="{{ handleFormName }}" style="width: 100%; padding: 14px 16px; border: 1px solid #d8dce8; border-radius: 3px; font-size: 15px; color: #333; outline: none; transition: border-color .2s;" style-focus="border-color: #1A237E;">
+                  </div>
+                  <div>
+                    <label style="display: block; font-size: 12px; font-weight: 700; color: #1A237E; letter-spacing: .8px; text-transform: uppercase; margin-bottom: 8px;">E-mail</label>
+                    <input type="email" placeholder="seu@email.com" value="{{ formEmail }}" onChange="{{ handleFormEmail }}" style="width: 100%; padding: 14px 16px; border: 1px solid #d8dce8; border-radius: 3px; font-size: 15px; color: #333; outline: none; transition: border-color .2s;" style-focus="border-color: #1A237E;">
+                  </div>
+                  <div>
+                    <label style="display: block; font-size: 12px; font-weight: 700; color: #1A237E; letter-spacing: .8px; text-transform: uppercase; margin-bottom: 8px;">Assunto</label>
+                    <input type="text" placeholder="Assunto da mensagem" value="{{ formSubject }}" onChange="{{ handleFormSubject }}" style="width: 100%; padding: 14px 16px; border: 1px solid #d8dce8; border-radius: 3px; font-size: 15px; color: #333; outline: none; transition: border-color .2s;" style-focus="border-color: #1A237E;">
+                  </div>
+                  <div>
+                    <label style="display: block; font-size: 12px; font-weight: 700; color: #1A237E; letter-spacing: .8px; text-transform: uppercase; margin-bottom: 8px;">Mensagem</label>
+                    <textarea placeholder="Escreva sua mensagem..." value="{{ formMessage }}" onChange="{{ handleFormMessage }}" rows="5" style="width: 100%; padding: 14px 16px; border: 1px solid #d8dce8; border-radius: 3px; font-size: 15px; color: #333; outline: none; transition: border-color .2s;" style-focus="border-color: #1A237E;"></textarea>
+                  </div>
+                  <div>
+                    <button onClick="{{ handleFormSubmit }}" style="background: linear-gradient(135deg, #1A237E, #7B1FA2); color: #fff; font-size: 13px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; padding: 16px 44px; border: none; cursor: pointer; border-radius: 3px; transition: opacity .2s;" style-hover="opacity: .9;">Enviar Mensagem</button>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+
+            <!-- Sidebar redes -->
+            <div style="flex: 1; min-width: 240px; display: flex; flex-direction: column; gap: 20px;">
+              <div style="background: #fff; padding: 32px 28px; border-radius: 4px; box-shadow: 0 2px 20px rgba(26,35,126,.07);">
+                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #1A237E; margin-bottom: 24px;">Nossas Redes</h3>
+
+                <a href="https://instagram.com/prismanacional" style="display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 1px solid #ebebf0; border-radius: 3px; margin-bottom: 12px; transition: border-color .2s, background .2s;" style-hover="background: #fdf4ff; border-color: #7B1FA2;">
+                  <div style="width: 42px; height: 42px; border-radius: 8px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                  </div>
+                  <div>
+                    <p style="font-weight: 700; font-size: 14px; color: #1A237E; margin-bottom: 2px;">Instagram</p>
+                    <p style="font-size: 13px; color: #888;">@prismanacional</p>
+                  </div>
+                </a>
+
+                <a href="#" style="display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 1px solid #ebebf0; border-radius: 3px; margin-bottom: 12px; transition: border-color .2s, background .2s;" style-hover="background: #f5f5f5; border-color: #333;">
+                  <div style="width: 42px; height: 42px; border-radius: 8px; background: #000; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.741l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                  </div>
+                  <div>
+                    <p style="font-weight: 700; font-size: 14px; color: #1A237E; margin-bottom: 2px;">X (Twitter)</p>
+                    <p style="font-size: 13px; color: #888;">@prismanacional</p>
+                  </div>
+                </a>
+
+                <a href="#" style="display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 1px solid #ebebf0; border-radius: 3px; transition: border-color .2s, background .2s;" style-hover="background: #f5f5f5; border-color: #333;">
+                  <div style="width: 42px; height: 42px; border-radius: 8px; background: #000; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg width="18" height="18" viewBox="0 0 192 192" fill="#fff"><path d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6116 63.5383 90.6052 61.6848 97.2286 61.6848C97.3051 61.6848 97.3819 61.6848 97.4576 61.6855C105.707 61.7381 111.932 64.1366 115.961 68.814C118.893 72.2193 120.854 76.925 121.825 82.8638C114.511 81.6207 106.601 81.2385 98.145 81.7233C74.3247 83.0954 59.0111 96.9879 60.0396 116.292C60.5615 126.084 65.4397 134.508 73.775 140.011C80.8224 144.663 89.899 146.938 99.3323 146.423C111.79 145.74 121.563 140.987 128.381 132.296C133.559 125.696 136.834 117.143 138.28 106.366C144.217 109.949 148.617 114.664 151.047 120.332C155.179 129.967 155.42 145.8 142.501 158.708C131.182 170.016 117.576 174.908 97.0135 175.059C74.2042 174.89 56.9538 167.575 45.7381 153.317C35.2355 139.966 29.8077 120.682 29.6052 96C29.8077 71.3178 35.2355 52.0336 45.7381 38.6827C56.9538 24.4249 74.2039 17.11 97.0132 16.9405C119.988 17.1113 137.539 24.4614 149.184 38.788C154.894 45.8136 159.199 54.6488 162.037 64.9503L178.184 60.6422C174.744 47.9622 169.331 37.0357 161.965 27.974C147.036 9.60668 125.202 0.195148 97.0695 0H96.9569C68.8816 0.19447 47.2921 9.6418 32.7883 28.0751C19.8819 44.4257 13.2244 67.3269 13.0007 95.9992C13.2244 124.671 19.8819 147.572 32.7883 163.925C47.2921 182.358 68.8816 191.806 96.9569 192H97.0695C122.03 191.827 139.624 185.292 154.118 170.811C173.081 151.866 172.51 128.119 166.26 113.541C161.776 103.087 153.227 94.5962 141.537 88.9883ZM98.4405 129.507C88.0005 130.095 77.1544 125.409 76.6196 115.372C76.2232 107.93 81.9158 99.626 99.0812 98.6368C101.047 98.5234 102.976 98.468 104.871 98.468C111.106 98.468 116.939 99.0737 122.242 100.233C120.264 124.935 108.662 128.946 98.4405 129.507Z"></path></svg>
+                  </div>
+                  <div>
+                    <p style="font-weight: 700; font-size: 14px; color: #1A237E; margin-bottom: 2px;">Threads</p>
+                    <p style="font-size: 13px; color: #888;">@prismanacional</p>
+                  </div>
+                </a>
+              </div>
+
+              <!-- Email direto -->
+              <div style="background: linear-gradient(135deg, #1A237E, #7B1FA2); padding: 28px; border-radius: 4px;">
+                <h4 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #fff; margin-bottom: 8px;">E-mail Editorial</h4>
+                <p style="color: rgba(255,255,255,.7); font-size: 13px; margin-bottom: 12px;">Para submissões e dúvidas:</p>
+                <p style="color: #F9A825; font-size: 14px; font-weight: 700;">contato@prismanacional.com.br</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </sc-if>
+
+  <div style="flex: 1;"></div>
+</div>
+
+<!-- ========================================================
+     FOOTER
+     ======================================================== -->
+<footer style="background: #08104a; color: #fff; padding: 64px 28px 0;">
+  <div style="max-width: 1160px; margin: 0 auto;">
+    <div class="pn-footer-grid" style="display: grid; grid-template-columns: 2fr 1fr 1.6fr; gap: 52px; padding-bottom: 52px; border-bottom: 1px solid rgba(255,255,255,.1);">
+
+      <!-- Col 1: Logo + desc + social -->
+      <div>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <polygon points="14,2 16.8,9.8 25,9.8 18.5,14.8 21,22.5 14,17.8 7,22.5 9.5,14.8 3,9.8 11.2,9.8" fill="#F9A825"></polygon>
+          </svg>
+          <span style="font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; color: #fff; letter-spacing: 2px; text-transform: uppercase;">Prisma Nacional</span>
+        </div>
+        <p style="color: rgba(255,255,255,.55); font-size: 14px; line-height: 1.85; max-width: 300px; margin-bottom: 28px;">Revista científica de iconografia na arte brasileira. Publicação de acesso aberto, comprometida com o patrimônio cultural e a memória coletiva do Brasil.</p>
+        <div style="display: flex; gap: 10px;">
+          <a href="#" style="width: 38px; height: 38px; border-radius: 4px; background: rgba(255,255,255,.1); display: flex; align-items: center; justify-content: center; color: #fff; transition: background .2s;" style-hover="background: rgba(249,168,37,.3);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+          </a>
+          <a href="#" style="width: 38px; height: 38px; border-radius: 4px; background: rgba(255,255,255,.1); display: flex; align-items: center; justify-content: center; color: #fff; transition: background .2s;" style-hover="background: rgba(249,168,37,.3);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.741l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+          </a>
+          <a href="#" style="width: 38px; height: 38px; border-radius: 4px; background: rgba(255,255,255,.1); display: flex; align-items: center; justify-content: center; color: #fff; transition: background .2s;" style-hover="background: rgba(249,168,37,.3);">
+            <svg width="14" height="14" viewBox="0 0 192 192" fill="currentColor"><path d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6116 63.5383 90.6052 61.6848 97.2286 61.6848C97.3051 61.6848 97.3819 61.6848 97.4576 61.6855C105.707 61.7381 111.932 64.1366 115.961 68.814C118.893 72.2193 120.854 76.925 121.825 82.8638C114.511 81.6207 106.601 81.2385 98.145 81.7233C74.3247 83.0954 59.0111 96.9879 60.0396 116.292C60.5615 126.084 65.4397 134.508 73.775 140.011C80.8224 144.663 89.899 146.938 99.3323 146.423C111.79 145.74 121.563 140.987 128.381 132.296C133.559 125.696 136.834 117.143 138.28 106.366C144.217 109.949 148.617 114.664 151.047 120.332C155.179 129.967 155.42 145.8 142.501 158.708C131.182 170.016 117.576 174.908 97.0135 175.059C74.2042 174.89 56.9538 167.575 45.7381 153.317C35.2355 139.966 29.8077 120.682 29.6052 96C29.8077 71.3178 35.2355 52.0336 45.7381 38.6827C56.9538 24.4249 74.2039 17.11 97.0132 16.9405C119.988 17.1113 137.539 24.4614 149.184 38.788C154.894 45.8136 159.199 54.6488 162.037 64.9503L178.184 60.6422C174.744 47.9622 169.331 37.0357 161.965 27.974C147.036 9.60668 125.202 0.195148 97.0695 0H96.9569C68.8816 0.19447 47.2921 9.6418 32.7883 28.0751C19.8819 44.4257 13.2244 67.3269 13.0007 95.9992C13.2244 124.671 19.8819 147.572 32.7883 163.925C47.2921 182.358 68.8816 191.806 96.9569 192H97.0695C122.03 191.827 139.624 185.292 154.118 170.811C173.081 151.866 172.51 128.119 166.26 113.541C161.776 103.087 153.227 94.5962 141.537 88.9883ZM98.4405 129.507C88.0005 130.095 77.1544 125.409 76.6196 115.372C76.2232 107.93 81.9158 99.626 99.0812 98.6368C101.047 98.5234 102.976 98.468 104.871 98.468C111.106 98.468 116.939 99.0737 122.242 100.233C120.264 124.935 108.662 128.946 98.4405 129.507Z"></path></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Col 2: Links -->
+      <div>
+        <h4 style="font-family: 'Playfair Display', serif; font-size: .9rem; color: #F9A825; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 24px;">Navegação</h4>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <button onClick="{{ goHome }}" style="background: none; border: none; color: rgba(255,255,255,.6); font-size: 14px; text-align: left; cursor: pointer; padding: 0; font-family: 'Lato', sans-serif; transition: color .2s;" style-hover="color: #F9A825;">Home</button>
+          <button onClick="{{ goAbout }}" style="background: none; border: none; color: rgba(255,255,255,.6); font-size: 14px; text-align: left; cursor: pointer; padding: 0; font-family: 'Lato', sans-serif; transition: color .2s;" style-hover="color: #F9A825;">Sobre</button>
+          <button onClick="{{ goContact }}" style="background: none; border: none; color: rgba(255,255,255,.6); font-size: 14px; text-align: left; cursor: pointer; padding: 0; font-family: 'Lato', sans-serif; transition: color .2s;" style-hover="color: #F9A825;">Contato</button>
+          <a href="#" style="color: rgba(255,255,255,.6); font-size: 14px; transition: color .2s;" style-hover="color: #F9A825;">Política Editorial</a>
+        </div>
+      </div>
+
+      <!-- Col 3: Licença -->
+      <div>
+        <h4 style="font-family: 'Playfair Display', serif; font-size: .9rem; color: #F9A825; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 24px;">Acesso Aberto</h4>
+        <div style="display: flex; gap: 14px; align-items: flex-start; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 3px; padding: 18px 20px; margin-bottom: 18px;">
+          <svg width="38" height="38" viewBox="0 0 38 38" flex-shrink="0" style="flex-shrink: 0; margin-top: 2px;">
+            <circle cx="19" cy="19" r="18" fill="#F9A825"></circle>
+            <text x="19" y="25" text-anchor="middle" font-family="serif" font-size="14" font-weight="900" fill="#1A237E">cc</text>
+          </svg>
+          <div>
+            <p style="color: #fff; font-size: 14px; font-weight: 700; margin-bottom: 6px;">Licença CC BY 4.0</p>
+            <p style="color: rgba(255,255,255,.55); font-size: 13px; line-height: 1.65;">Todo o conteúdo está disponível sob a Licença Creative Commons Atribuição 4.0 Internacional.</p>
+          </div>
+        </div>
+        <a href="https://www.prismanacional.com.br" style="color: #F9A825; font-size: 13px; font-weight: 700;">www.prismanacional.com.br</a>
+      </div>
+
+    </div>
+
+    <!-- Copyright -->
+    <div style="padding: 22px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+      <p style="color: rgba(255,255,255,.38); font-size: 13px;">© 2025 Prisma Nacional. Todos os direitos reservados.</p>
+      <p style="color: rgba(255,255,255,.28); font-size: 12px;">Iconografia · Patrimônio · Memória</p>
+    </div>
+  </div>
+</footer>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+
+class Component extends DCLogic {
+  state = {
+    currentPage: 'home',
+    mobileMenuOpen: false,
+    emailInput: '',
+    subscribed: false,
+    formName: '',
+    formEmail: '',
+    formSubject: '',
+    formMessage: '',
+    formSent: false
+  };
+
+  nav(page) {
+    this.setState({ currentPage: page, mobileMenuOpen: false });
+    if (typeof window !== 'undefined') window.scrollTo(0, 0);
+  }
+
+  renderVals() {
+    const { currentPage, mobileMenuOpen, emailInput, subscribed,
+            formName, formEmail, formSubject, formMessage, formSent } = this.state;
+
+    const col = (page) => currentPage === page ? '#1A237E' : '#777';
+    const brd = (page) => currentPage === page ? '#F9A825' : 'transparent';
+
+    return {
+      showHome:    currentPage === 'home',
+      showAbout:   currentPage === 'about',
+      showContact: currentPage === 'contact',
+      mobileMenuOpen,
+
+      navHomeColor:    col('home'),
+      navAboutColor:   col('about'),
+      navContactColor: col('contact'),
+      navHomeBorder:    brd('home'),
+      navAboutBorder:   brd('about'),
+      navContactBorder: brd('contact'),
+
+      emailInput, subscribed,
+      showNewsletterForm: !subscribed,
+      formName, formEmail, formSubject, formMessage,
+      formSent,
+      showContactForm: !formSent,
+
+      goHome:    () => this.nav('home'),
+      goAbout:   () => this.nav('about'),
+      goContact: () => this.nav('contact'),
+      toggleMenu: () => this.setState(s => ({ mobileMenuOpen: !s.mobileMenuOpen })),
+
+      handleEmail:      (e) => this.setState({ emailInput: e.target.value }),
+      handleSubscribe:  () => { if (this.state.emailInput.trim()) this.setState({ subscribed: true }); },
+
+      handleFormName:    (e) => this.setState({ formName: e.target.value }),
+      handleFormEmail:   (e) => this.setState({ formEmail: e.target.value }),
+      handleFormSubject: (e) => this.setState({ formSubject: e.target.value }),
+      handleFormMessage: (e) => this.setState({ formMessage: e.target.value }),
+      handleFormSubmit:  () => this.setState({ formSent: true }),
+      handleReadArticle: () => alert('Redirecionando para o artigo completo...'),
+    };
+  }
+}
+
+</script>
+</body>
+</html>
